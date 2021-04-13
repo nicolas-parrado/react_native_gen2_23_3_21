@@ -1,6 +1,6 @@
-import React from 'react'
-import { View, StyleSheet } from 'react-native'
-import Chip from './Chip'
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import GenresChip from './GenreChip';
 
 const styles = StyleSheet.create({
   container: {
@@ -11,18 +11,15 @@ const styles = StyleSheet.create({
 
 const Filters = ({ moviesGenres, onPress }) => {
   const genresChip = moviesGenres.map((genre, index) => (
-    <Chip
+    <GenresChip
       pressable
       onPress={onPress}
-      key={`genres-${index}`} value={genre}
+      key={`genres-${index}`}
+      value={genre}
     />
   ));
 
-  return (
-    <View style={styles.container}>
-      {genresChip}
-    </View>
-  );
+  return <View style={styles.container}>{genresChip}</View>;
 };
 
 export default Filters;

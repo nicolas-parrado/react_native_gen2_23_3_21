@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
-import {
-  Text,
-  StyleSheet,
-  View,
-  Image,
-  ActivityIndicator,
-} from 'react-native';
+import { Text, StyleSheet, View, Image, ActivityIndicator } from 'react-native';
 import Rating from '../Rating';
 import ActorsList from './ActorsList';
 import MovieCardImage from './MovieCardImage';
 import MovieFullscreenImage from './MovieFullscreenImage';
+import GenresList from './GenresList';
+import Description from './Description';
 
 const styles = StyleSheet.create({
   container: {
@@ -46,12 +42,12 @@ const styles = StyleSheet.create({
     padding: 0,
     elevation: 10,
     backgroundColor: 'white',
-  }
+  },
 });
 
 export default class MovieCard extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       isLoading: true,
@@ -62,15 +58,28 @@ export default class MovieCard extends Component {
     };
   }
 
-  starRatingChange = starPosition => this.setState({ starRating: starPosition })
+  starRatingChange = starPosition =>
+    this.setState({ starRating: starPosition });
 
   toggleLike = () => this.setState(({ like }) => ({ like: !like }));
 
-  toggleFullscreen = () => this.setState(({ showFullscreenImage }) => ({ showFullscreenImage: !showFullscreenImage }));
+  toggleFullscreen = () =>
+    this.setState(({ showFullscreenImage }) => ({
+      showFullscreenImage: !showFullscreenImage,
+    }));
 
   render() {
-    const { posterurl, title, year, imdbRating, actors } = this.props;
-    const { showFullscreenImage,
+    const {
+      posterurl,
+      title,
+      year,
+      imdbRating,
+      actors,
+      genres,
+      description,
+    } = this.props;
+    const {
+      showFullscreenImage,
       validImage,
       isLoading,
       starRating,
@@ -79,11 +88,13 @@ export default class MovieCard extends Component {
 
     return (
       <View style={styles.container}>
-        { isLoading && <ActivityIndicator color="red" size="large" />}
-        { showFullscreenImage
-          && validImage
-          && <MovieFullscreenImage onPress={this.toggleFullscreen} source={{ uri: posterurl }} />
-        }
+        {isLoading && <ActivityIndicator color="red" size="large" />}
+        {showFullscreenImage && validImage && (
+          <MovieFullscreenImage
+            onPress={this.toggleFullscreen}
+            source={{ uri: posterurl }}
+          />
+        )}
         <MovieCardImage
           validImage={validImage}
           posterurl={posterurl}
@@ -116,6 +127,8 @@ export default class MovieCard extends Component {
             {imdbRating}
           </Text>
         </View>
+        <Description description={description} />
+        <GenresList genres={genres} />
         <ActorsList actors={actors} />
       </View>
     );

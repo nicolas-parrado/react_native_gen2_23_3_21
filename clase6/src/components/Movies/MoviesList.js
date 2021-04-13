@@ -10,24 +10,25 @@ const styles = StyleSheet.create({
   },
   filterButton: {
     position: 'absolute',
-    top: '70%',
+    top: '80%',
     left: '80%',
   },
 });
+
 export default class MoviesList extends PureComponent {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       movies: props.movies,
       modalActive: false,
       moviesGenres: [],
     };
-  };
+  }
 
   componentDidMount = () => {
     this.getGenresDataFromMovies();
-  }
+  };
 
   getGenresDataFromMovies = () => {
     const { movies } = this.props;
@@ -40,18 +41,15 @@ export default class MoviesList extends PureComponent {
     this.setState({ moviesGenres: [...genresSet] });
   };
 
-  toggleModal = () => this.setState(({ modalActive }) => ({ modalActive: !modalActive }));
+  toggleModal = () =>
+    this.setState(({ modalActive }) => ({ modalActive: !modalActive }));
 
-  applyFilter = (genre) => {
+  applyFilter = genre => {
     const { movies } = this.props;
-    const filteredMovies = movies.filter((movie) =>
-      movie.genres.includes(genre)
-    );
-    this.setState({ movies: filteredMovies, modalActive: false },
-      () => {
-        this.flatlist.scrollToOffset({ animated: true, offset: 0 })
-      }
-    );
+    const filteredMovies = movies.filter(movie => movie.genres.includes(genre));
+    this.setState({ movies: filteredMovies, modalActive: false }, () => {
+      this.flatlist.scrollToOffset({ animated: true, offset: 0 });
+    });
   };
 
   render() {
@@ -60,7 +58,7 @@ export default class MoviesList extends PureComponent {
     return (
       <>
         <FlatList
-          ref={(ref) => (this.flatlist = ref)}
+          ref={ref => (this.flatlist = ref)}
           style={styles.list}
           data={movies}
           keyExtractor={({ poster }) => poster}
@@ -72,7 +70,9 @@ export default class MoviesList extends PureComponent {
               imdbRating,
               title,
               actors,
-            }
+              genres,
+              storyline,
+            },
           }) => {
             return (
               <MovieCard
@@ -81,6 +81,8 @@ export default class MoviesList extends PureComponent {
                 year={year}
                 imdbRating={imdbRating}
                 actors={actors}
+                genres={genres}
+                description={storyline}
               />
             );
           }}
@@ -88,14 +90,8 @@ export default class MoviesList extends PureComponent {
         <View style={styles.filterButton}>
           <FilterButton onPress={this.toggleModal} />
         </View>
-        <Modal
-          visible={modalActive}
-          animationType="slide"
-        >
-          <Filters
-            moviesGenres={moviesGenres}
-            onPress={this.applyFilter}
-          />
+        <Modal visible={modalActive} animationType="slide">
+          <Filters moviesGenres={moviesGenres} onPress={this.applyFilter} />
           <Button title="Cerrar Modal" onPress={this.toggleModal} />
         </Modal>
       </>
